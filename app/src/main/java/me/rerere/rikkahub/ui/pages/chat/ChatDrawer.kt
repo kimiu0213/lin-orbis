@@ -255,9 +255,9 @@ fun ChatDrawerContent(
                 if (BuildConfig.ORBIS_ENABLED) {
                     UIAvatar(assistantName ?: "当前 AI", selectedAssistant?.avatar ?: Avatar.Emoji("✦"), Modifier.size(39.dp))
                     Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(3.dp)) {
-                        Text("${assistantName ?: "当前 AI"}的会话", fontSize = 13.sp, lineHeight = 18.sp,
+                        Text("我们家", fontSize = 13.sp, lineHeight = 18.sp,
                             fontWeight = FontWeight.SemiBold, maxLines = 1, overflow = TextOverflow.Ellipsis)
-                        Text("同一个${assistantName ?: "AI"} · 不拆成多个助手", fontSize = 9.sp, lineHeight = 13.sp,
+                        Text("只此一个 · ${assistantName ?: "粼"}", fontSize = 9.sp, lineHeight = 13.sp,
                             color = colors.mutedInk)
                     }
                 } else {
@@ -373,7 +373,7 @@ fun ChatDrawerContent(
                     onMoveToFolder = { conversationToMoveFolder = it; showMoveToFolderSheet = true },
                     header = {
                         Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                            Text("同一身份下的聊天窗口；聊天与外观保存在本机。", fontSize = 9.sp,
+                            Text("你和我的窗口；聊天与外观都留在本机。", fontSize = 9.sp,
                                 lineHeight = 14.sp, color = colors.mutedInk)
                             Button(onClick = { selectedAssistant?.let { assistant ->
                                 creating = true
@@ -387,7 +387,7 @@ fun ChatDrawerContent(
                                 }
                             } }, enabled = selectedAssistant != null && !creating, modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp),
                                 shape = RoundedCornerShape(13.dp), contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp)) {
-                                Text(if (creating) "正在创建…" else "+  新建同一${assistantName ?: "AI"}会话", fontSize = 11.sp)
+                                Text(if (creating) "正在打开…" else "+  新开一扇窗", fontSize = 11.sp)
                             }
                             TextButton(onClick = { beginRename(current) }, modifier = Modifier.heightIn(min = 48.dp),
                                 shape = RoundedCornerShape(12.dp),

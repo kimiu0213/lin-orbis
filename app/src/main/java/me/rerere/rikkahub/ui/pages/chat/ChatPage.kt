@@ -967,7 +967,7 @@ private fun TopBar(
                 .padding(horizontal = 10.dp), verticalAlignment = Alignment.CenterVertically) {
                 Box(Modifier.weight(1f).heightIn(min = 48.dp)
                     .clickable { titleState.open(conversation.title) }, contentAlignment = Alignment.CenterStart) {
-                    Text(conversation.title.ifBlank { "和${assistant.name.ifBlank { "AI" }}说话" },
+                    Text(conversation.title.ifBlank { "和${assistant.name.ifBlank { "粼" }}说话" },
                         modifier = Modifier.background(OrbisTheme.colors.raisedPanel.copy(alpha = .72f), RoundedCornerShape(12.dp))
                             .padding(horizontal = 10.dp, vertical = 5.dp),
                         fontSize = 14.sp, lineHeight = 20.sp, maxLines = 1,

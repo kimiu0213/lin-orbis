@@ -797,7 +797,7 @@ private fun TextInputRow(
             textStyle = if (BuildConfig.ORBIS_ENABLED) MaterialTheme.typography.bodyMedium.copy(fontSize = 14.sp, lineHeight = 21.sp) else MaterialTheme.typography.bodyLarge,
             contentPadding = if (BuildConfig.ORBIS_ENABLED) PaddingValues(horizontal = 10.dp, vertical = 12.dp) else TextFieldDefaults.contentPaddingWithoutLabel(),
             placeholder = {
-                Text(if (BuildConfig.ORBIS_ENABLED) "输入消息，与我聊聊…" else stringResource(R.string.chat_input_placeholder),
+                Text(if (BuildConfig.ORBIS_ENABLED) "我在，说吧…" else stringResource(R.string.chat_input_placeholder),
                     style = if (BuildConfig.ORBIS_ENABLED) MaterialTheme.typography.bodyMedium else MaterialTheme.typography.bodyLarge)
             },
             lineLimits = TextFieldLineLimits.MultiLine(maxHeightInLines = 5),
