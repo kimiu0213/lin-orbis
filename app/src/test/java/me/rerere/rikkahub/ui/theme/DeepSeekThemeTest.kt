@@ -110,8 +110,8 @@ class DeepSeekThemeTest {
             resolveOrbisVisualColors(darkTheme = false, deepSeekStyle = false))
         assertSame(OrbisPalette.Dark,
             resolveOrbisVisualColors(darkTheme = true, deepSeekStyle = false))
-        assertEquals(Color(0xFFFBF6ED), OrbisPalette.Light.page)
-        assertEquals(Color(0xFF171827), OrbisPalette.Dark.page)
+        assertEquals(Color(0xFFF8F5EE), OrbisPalette.Light.page)
+        assertEquals(Color(0xFF121A24), OrbisPalette.Dark.page)
         assertEquals(Color(0xFFF9DFAA), OrbisPalette.Light.star)
         assertEquals(Color(0xFFFFE5AD), OrbisPalette.Dark.star)
     }
