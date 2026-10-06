@@ -57,6 +57,17 @@ android {
     }
 
     signingConfigs {
+        // linmiu: 固定的调试签名。CI 每次都是干净的机器，如果不显式指定，
+        // Gradle 会自己新生成一把 debug key，导致每次出的包签名都不同、无法覆盖安装。
+        create("linmiuDebug") {
+            val ks = rootProject.file("ci/debug.keystore")
+            if (ks.exists()) {
+                storeFile = ks
+                storePassword = "android"
+                keyAlias = "androiddebugkey"
+                keyPassword = "android"
+            }
+        }
         create("release") {
             val localProperties = Properties()
             val localPropertiesFile = rootProject.file("local.properties")
@@ -94,6 +105,8 @@ android {
             buildConfigField("String", "VERSION_CODE", "\"${android.defaultConfig.versionCode}\"")
         }
         debug {
+            // linmiu: 显式使用固定签名（若 ci/debug.keystore 存在）
+            signingConfig = signingConfigs.getByName("linmiuDebug").takeIf { it.storeFile != null }
             // Explicit private test build only; never persisted as a user setting.
             buildConfigField("boolean", "ORBIS_CONSULTATION_ENABLED",
                 (providers.gradleProperty("orbisInternalConsultation").orNull == "true").toString())

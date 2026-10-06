@@ -69,6 +69,15 @@ jobs:
           chmod +x ./gradlew
           ./gradlew --no-daemon --stacktrace assembleDebug
 
+      - name: Print signing certificate
+        if: always()
+        run: |
+          APKSIGNER=$(find "$ANDROID_HOME" -name apksigner -type f 2>/dev/null | head -n 1)
+          echo "apksigner: $APKSIGNER"
+          for f in app/build/outputs/apk/debug/*.apk; do
+            echo "=== $f"; "$APKSIGNER" verify --print-certs "$f" 2>/dev/null | head -5 || true
+          done
+
       - name: Upload APK
         if: always()
         uses: actions/upload-artifact@v4
