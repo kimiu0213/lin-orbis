@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import me.rerere.rikkahub.BuildConfig
 import me.rerere.rikkahub.ui.theme.ColorMode
 
 private const val COLOR_MODE_KEY = "colorMode"
@@ -28,6 +29,8 @@ fun rememberColorMode(): MutableState<ColorMode> {
 
 @Composable
 fun rememberCurrentColorMode(): ColorMode {
+    // linmiu: Orbis 构建里昼夜固定为夜晚，不跟随系统也不提供切换。
+    if (BuildConfig.ORBIS_ENABLED) return ColorMode.DARK
     val colorModeValue by rememberSharedPreferenceString(COLOR_MODE_KEY, ColorMode.SYSTEM.name)
     return colorModeValue.toColorMode()
 }

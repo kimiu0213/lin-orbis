@@ -134,7 +134,6 @@ fun OrbisAppearancePanel(
     val deepSeek = LocalOrbisDeepSeekStyle.current
     val appearance = displaySetting.appearanceForStyle(deepSeek)
     val colors = OrbisTheme.colors
-    var colorMode by rememberColorMode()
     val userName = displaySetting.userNickname.ifBlank { "我" }
     val assistantName = assistant?.name?.ifBlank { "当前 AI" } ?: "当前 AI"
     fun updateAppearance(transform: (OrbisAppearance) -> OrbisAppearance) {
@@ -161,7 +160,7 @@ fun OrbisAppearancePanel(
             Text(if (embedded) "外观 DIY · 即时预览" else "外观 DIY", style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.SemiBold, modifier = Modifier.weight(1f).semantics { heading() })
         }
-        Text("外观更改即时保存；昵称需点“保存昵称”。头像与背景不改变聊天、模型或身份。", style = MaterialTheme.typography.bodySmall,
+        Text("这里只留两处不透明度；昵称、头像、背景、字体与主题都已定好，不再需要挑。", style = MaterialTheme.typography.bodySmall,
             color = colors.mutedInk)
 
         if (!embedded) AppearanceCard("即时预览") {
@@ -189,89 +188,9 @@ fun OrbisAppearancePanel(
             }
         }
 
-        AppearanceCard("个人设置 · 昵称与头像") {
-            OrbisNicknameSetting(displaySetting.userNickname, onUpdateUserNickname)
-            if (deepSeek) {
-                AppearanceToggle("DS 主题显示头像", displaySetting.deepSeekShowAvatars) { value ->
-                    onUpdateDisplay { it.copy(deepSeekShowAvatars = value) }
-                }
-                AppearanceToggle("DS 主题思考默认收起", displaySetting.deepSeekCollapseThinking) { value ->
-                    onUpdateDisplay { it.copy(deepSeekCollapseThinking = value) }
-                }
-            }
-            AvatarChoices(userName, displaySetting.userAvatar, listOf(userName.take(1), "🌸", "☁")) { value ->
-                onUpdateDisplay { it.copy(userAvatar = value) }
-            }
-            AppearanceToggle("显示用户头像", displaySetting.showUserAvatar) { checked ->
-                onUpdateDisplay { it.copy(showUserAvatar = checked) }
-            }
-        }
-        AppearanceCard("当前 AI 头像") {
-            if (assistant != null) {
-                Text(assistantName, style = MaterialTheme.typography.bodySmall, color = colors.mutedInk)
-                AvatarChoices(assistantName, assistant.avatar, listOf(assistantName.take(1), "🌙", "✦"),
-                    onUpdateAssistantAvatar)
-                Text("只修改当前会话所属 AI 的头像；主动选择后用于聊天头像。",
-                    style = MaterialTheme.typography.bodySmall, color = colors.mutedInk)
-            } else {
-                Text("此会话尚未关联可编辑的 AI 配置。", style = MaterialTheme.typography.bodySmall)
-            }
-        }
-        AppearanceCard("聊天背景") {
-            FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                OrbisBackgroundStyle.entries.forEach { style ->
-                    BackgroundSwatch(style, appearance.backgroundEnabled && appearance.backgroundImage == null && appearance.backgroundStyle == style) {
-                        updateAppearance { it.copy(backgroundEnabled = true, backgroundStyle = style, backgroundImage = null) }
-                    }
-                }
-            }
-            CroppedBackgroundButton { image ->
-                updateAppearance { it.copy(backgroundEnabled = true, backgroundImage = image) }
-            }
-            if (appearance.backgroundImage != null) {
-                TextButton(onClick = { updateAppearance { it.copy(backgroundImage = null) } }) { Text("移除自选背景，使用当前底色") }
-            }
-            TextButton(onClick = { updateAppearance { it.copy(backgroundEnabled = false) } }) {
-                Text("沿用当前 AI 原背景")
-            }
-            Text(if (!appearance.backgroundEnabled) "正沿用原背景；未设置原图时显示纸页底色。" else "正在使用 Orbis 自选背景，原背景仍保留。",
-                style = MaterialTheme.typography.bodySmall, color = colors.mutedInk)
-        }
-        AppearanceCard("气泡款式") {
-            FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                OrbisBubbleStyle.entries.forEach { style ->
-                    FilterChip(selected = appearance.bubbleStyle == style,
-                        onClick = { updateAppearance { it.copy(bubbleStyle = style) } }, label = { Text(style.label()) })
-                }
-            }
-        }
-        AppearanceCard("星光与动效") {
-            AppearanceToggle("向上漂浮的星光", appearance.floatingStars) { checked ->
-                updateAppearance { it.copy(floatingStars = checked) }
-            }
-            AppearanceToggle("减少动效", appearance.reduceMotion) { checked ->
-                updateAppearance { it.copy(reduceMotion = checked) }
-            }
-            Text("省电模式、系统关闭动画或页面不在前台时，星光保持静止。",
-                style = MaterialTheme.typography.bodySmall, color = colors.mutedInk)
-        }
-        AppearanceCard("聊天字体") {
-            FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                listOf(ChatFontFamily.DEFAULT, ChatFontFamily.SERIF, ChatFontFamily.MONOSPACE).forEach { family ->
-                    FilterChip(selected = displaySetting.chatFontFamily == family,
-                        onClick = { onUpdateDisplay { it.copy(chatFontFamily = family) } },
-                        label = { Text(when (family) { ChatFontFamily.SERIF -> "宋体"; ChatFontFamily.MONOSPACE -> "等宽"; else -> "系统" }) })
-                }
-                if (displaySetting.chatCustomFontPath.isNotBlank()) {
-                    FilterChip(selected = displaySetting.chatFontFamily == ChatFontFamily.CUSTOM,
-                        onClick = { onUpdateDisplay { it.copy(chatFontFamily = ChatFontFamily.CUSTOM) } }, label = { Text("已上传字体") })
-                }
-            }
-            Text("自定义字体上传与字号见下方“外观高级”。", style = MaterialTheme.typography.bodySmall, color = colors.mutedInk)
-        }
         AppearanceCard("气泡不透明度") {
             OrbisBubbleOpacityControls(appearance, ::updateAppearance)
-            Text("0% 为全透明，气泡底色、边框和阴影都隐藏。文字看不清时，可在“外观高级 → 界面偏好”调整聊天文字颜色与亮度。", style = MaterialTheme.typography.bodySmall, color = colors.mutedInk)
+            Text("0% 为全透明，气泡底色、边框和阴影都隐藏。", style = MaterialTheme.typography.bodySmall, color = colors.mutedInk)
         }
         AppearanceCard("聊天输入框底色") {
             Text("背景不透明度 ${(appearance.composerOpacity * 100).roundToInt()}%", style = MaterialTheme.typography.bodyMedium)
@@ -282,27 +201,6 @@ fun OrbisAppearancePanel(
             Text("向左更通透，向右底色更实。文字与图标保持原有颜色；复杂背景建议提高不透明度。",
                 style = MaterialTheme.typography.bodySmall, color = colors.mutedInk)
         }
-        AppearanceCard("日夜与主题") {
-            FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                ColorMode.entries.forEach { mode ->
-                    FilterChip(selected = colorMode == mode, onClick = { colorMode = mode },
-                        label = { Text(when (mode) { ColorMode.SYSTEM -> "随系统"; ColorMode.LIGHT -> "白天"; ColorMode.DARK -> "夜晚" }) })
-                }
-            }
-            TextButton(onClick = { onNavigate(Screen.SettingTheme) }) { Text("主题配色与自定义 ›") }
-        }
-        AppearanceCard("外观高级") {
-            TextButton(onClick = { onNavigate(Screen.SettingPreferencesTheme) }) { Text("主题与深色细节 ›") }
-            TextButton(onClick = { onNavigate(Screen.SettingPreferencesUI) }) { Text("字号、字体与显示细节 ›") }
-        }
-        Text("图片使用应用现有的本地文件管理；导出包含文件的备份可能带上这些素材。此面板不会主动把图片发给模型。",
-            style = MaterialTheme.typography.bodySmall, color = colors.mutedInk)
-        TextButton(onClick = { onUpdateDisplay { it.withAppearanceForStyle(deepSeek) {
-            if (deepSeek) deepSeekDefaultAppearance() else OrbisAppearance()
-        } } }, modifier = Modifier.fillMaxWidth()) {
-            Text("恢复气泡、输入框与背景默认")
-        }
-        Text("重置气泡、输入框底色、背景与星光；头像、字体和主题保持原样。", style = MaterialTheme.typography.bodySmall, color = colors.mutedInk)
         if (showDoneButton) Button(onClick = onBack, modifier = Modifier.fillMaxWidth()) { Text(if (embedded) "完成预览" else "完成，回到会话") }
     }
     }
