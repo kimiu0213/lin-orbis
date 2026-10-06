@@ -63,7 +63,7 @@ import androidx.compose.ui.unit.sp
 import kotlin.math.cos
 import kotlin.math.sin
 
-private val StartupNight = Color(0xFF111526)
+private val StartupNight = OrbisPalette.Dark.page
 private val StartupGold = OrbisPalette.Dark.star
 private val StartupInk = OrbisPalette.Dark.ink
 private val StartupMuted = OrbisPalette.Dark.mutedInk
