@@ -202,6 +202,8 @@ fun OrbisChatDock(currentLabel: String = "当前 聊天") {
                     { menuOpen = false; returnToChat() }),
                 OrbisNavigationItem("orbis", "Orbis", "本地后花园 / 自建原站", HugeIcons.Home01,
                     { menuOpen = false; openHome() }),
+                OrbisNavigationItem("memory", "记忆星图", "你的记忆 · 时间与关联", HugeIcons.Sparkles,
+                    { go(Screen.OrbisMemoryAtlas) }),
                 OrbisNavigationItem("workspace", "工作区", "终端、文件与技能", HugeIcons.Command,
                     { go(Screen.Workspaces) }),
                 OrbisNavigationItem("tools", "工具", "MCP 连接与本地工具", HugeIcons.Package,
