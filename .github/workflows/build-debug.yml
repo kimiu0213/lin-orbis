@@ -38,6 +38,10 @@ jobs:
           cache: pnpm
           cache-dependency-path: web-ui/pnpm-lock.yaml
 
+      - name: Install web-ui dependencies
+        working-directory: web-ui
+        run: pnpm install --frozen-lockfile
+
       - name: Accept Android SDK licenses
         run: |
           echo "ANDROID_HOME=$ANDROID_HOME"
