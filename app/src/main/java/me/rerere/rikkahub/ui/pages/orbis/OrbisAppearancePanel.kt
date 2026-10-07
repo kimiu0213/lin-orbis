@@ -160,7 +160,7 @@ fun OrbisAppearancePanel(
             Text(if (embedded) "外观 DIY · 即时预览" else "外观 DIY", style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.SemiBold, modifier = Modifier.weight(1f).semantics { heading() })
         }
-        Text("这里只留两处不透明度；昵称、头像、背景、字体与主题都已定好，不再需要挑。", style = MaterialTheme.typography.bodySmall,
+        Text("这里只留两处不透明度和头像；昵称、背景、字体与主题都已定好，不再需要挑。", style = MaterialTheme.typography.bodySmall,
             color = colors.mutedInk)
 
         if (!embedded) AppearanceCard("即时预览") {
@@ -188,6 +188,19 @@ fun OrbisAppearancePanel(
             }
         }
 
+        AppearanceCard("头像") {
+            Text(userName, style = MaterialTheme.typography.bodySmall, color = colors.mutedInk)
+            AvatarChoices(userName, displaySetting.userAvatar, listOf(userName.take(1), "🌸", "☁")) { value ->
+                onUpdateDisplay { it.copy(userAvatar = value) }
+            }
+            AppearanceToggle("显示我的头像", displaySetting.showUserAvatar) { checked ->
+                onUpdateDisplay { it.copy(showUserAvatar = checked) }
+            }
+            if (assistant != null) {
+                Text(assistantName, style = MaterialTheme.typography.bodySmall, color = colors.mutedInk)
+                AvatarChoices(assistantName, assistant.avatar, listOf(assistantName.take(1), "🌙", "✦"), onUpdateAssistantAvatar)
+            }
+        }
         AppearanceCard("气泡不透明度") {
             OrbisBubbleOpacityControls(appearance, ::updateAppearance)
             Text("0% 为全透明，气泡底色、边框和阴影都隐藏。", style = MaterialTheme.typography.bodySmall, color = colors.mutedInk)
